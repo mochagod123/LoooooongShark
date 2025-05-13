@@ -1,0 +1,2 @@
+# LoooooongShark
+URLをサメ化します。
