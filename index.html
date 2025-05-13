@@ -1,0 +1,64 @@
+<html>
+    <head>
+       <title>Looooooong Shark</title>
+    </head>
+    <body>
+        <h1 id="data">...</h1>
+    </body>
+    <script>
+        function encodeUrlWithLength(url, chars = ['s', 'a', 'm', 'e']) {
+            if (chars.length !== 4) {
+                throw new Error("使用する文字は4つである必要があります。");
+            }
+
+            let encoded = "";
+            for (let i = 0; i < url.length; i++) {
+                const charCode = url.charCodeAt(i);
+                const index = charCode % 4;
+                const length = Math.floor(charCode / 4) + 1;
+                encoded += chars[index].repeat(length);
+                encoded += "_";
+            }
+            return encoded;
+        }
+
+        function decodeUrlWithLength(encodedUrl, chars = ['s', 'a', 'm', 'e']) {
+            if (chars.length !== 4) {
+                throw new Error("使用する文字は4つである必要があります。");
+            }
+
+            const parts = encodedUrl.split('_').filter(part => part !== "");
+            let decodedUrl = "";
+
+            for (const part of parts) {
+                if (part.length === 0) {
+                    continue;
+                }
+
+                const char = part[0];
+                const length = part.length;
+                const index = chars.indexOf(char);
+
+                if (index === -1) {
+                    throw new Error(`無効な文字 '${char}' がエンコードされた文字列に含まれています。`);
+                }
+
+                const charCode = index + (length - 1) * 4;
+                decodedUrl += String.fromCharCode(charCode);
+            }
+
+            return decodedUrl;
+        }
+
+        var par = location.search;
+        if (par) {
+            par = par.substring(1);
+            try {
+                var url = decodeUrlWithLength(par);
+                location.href = url;
+            } catch (e) {
+                document.getElementById("data").innerHTML = "無効な文字列が渡されました。";
+            }
+        }
+    </script>
+</html>
